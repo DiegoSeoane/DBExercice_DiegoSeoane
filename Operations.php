@@ -26,7 +26,7 @@ class Operations
         $data=$statement->fetch(PDO::FETCH_ASSOC);
         return $data;
     }
-    function GetAllCategories(){
+    function getAllCategories(){
         $sql = 'select * from category';
         $statement= $this->conn->prepare($sql);
         $statement->execute();
@@ -55,7 +55,7 @@ class Operations
        return $statement->rowCount();
     }
     function getUserName($login, $password){
-        $sql = 'select name from user where login = ? and password = ?';
+        $sql = 'select name,admin from user where login = ? and password = ?';
         $statement= $this->conn->prepare($sql);
         $statement->execute([$login,$password]);
         $data=$statement->fetch(PDO::FETCH_ASSOC);

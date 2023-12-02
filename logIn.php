@@ -9,7 +9,8 @@ if (isset($_POST['submit'])) {
     $password = $_POST['password'];
     if ($oper->getUserName($username, $password)!=null) {
         setcookie('username',$username);
-        header('location: Welcome.php');        
+        setcookie('password',$password);
+        header('location: welcome.php');        
     }else{        
         echo '<p style="color:red">User or password incorrect</p>';
     }
@@ -44,7 +45,11 @@ if (isset($_POST['submit'])) {
 <body>
     <form action="" method="post">
         <label for="login">User</label>
-        <input type="text" name="login" id="idLogin" value="<?php echo $username; ?>">
+        <input type="text" name="login" id="idLogin" value="<?php if (isset($username)) {
+            echo $username;
+        }else{
+            echo '';
+        } ?>">
         <label for="password">Password</label>
         <input type="password" name="password" id="idpassword">
         <button type="submit" name="submit">Log In</button>

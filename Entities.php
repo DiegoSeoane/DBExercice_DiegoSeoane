@@ -1,8 +1,14 @@
 <?php
-    class Category{
+    class Category implements JsonSerializable{
         private $id;
         private $name;
-
+        function jsonSerialize(): mixed
+        {
+                return[
+                        'id'=>$this->id,
+                        'name'=>$this->name
+                ];
+        }
         /**
          * Get the value of id
          */
@@ -33,12 +39,23 @@
                 return $this;
         }
     }
-    class Product{
+    class Product implements JsonSerializable{
         private $id;
         private $name;
         private $description;
         private $picture;
         private Category $category;
+
+        function jsonSerialize(): mixed
+        {
+                return[
+                        'id'=>$this->id,
+                        'name'=>$this->name,
+                        'description'=>$this->description,
+                        'picture'=>$this->picture,
+                        'category'=>$this->category,
+                ];
+        }
 
         /**
          * Get the value of id
@@ -99,30 +116,28 @@
                 $this->picture = $picture;
                 return $this;
         }
-                
-        /**CAMBIAR!!
+           /**
          * Get the value of category
-         *
-         * @return Category
-         */
-        public function getCategory(): Category {
-                return $this->category->getId();
+         */ 
+        public function getCategory()
+        {
+                return $this->category;
         }
 
         /**
          * Set the value of category
          *
-         * @param Category $category
-         *
-         * @return self
-         */
-        public function setCategory(Category $id): self {
-                $this->category->setId($id);
+         * @return  self
+         */ 
+        public function setCategory(Category $category)
+        {
+                $this->category = $category;
 
                 return $this;
-        }
+        }     
+
     }
-    class User{
+    class User implements JsonSerializable{
         private $id;
         private $dni;
         private $name;
@@ -130,6 +145,17 @@
         private $login;
         private $password;
 
+        function jsonSerialize(): mixed
+        {
+                return[
+                        'id' => $this->id,
+                        'dni' => $this->dni,
+                        'name' => $this->name,
+                        'address' => $this->address,
+                        'login' => $this->login,
+                        'password' => $this->password,
+                ];
+        }
         /**
          * Get the value of id
          */
@@ -219,6 +245,7 @@
                 $this->name = $name;
                 return $this;
         }
+        
     }
 
 ?>
