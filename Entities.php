@@ -45,6 +45,7 @@
         private $description;
         private $picture;
         private Category $category;
+        
 
         function jsonSerialize(): mixed
         {
@@ -53,7 +54,7 @@
                         'name'=>$this->name,
                         'description'=>$this->description,
                         'picture'=>$this->picture,
-                        'category'=>$this->category,
+                        'category'=>$this->category
                 ];
         }
 

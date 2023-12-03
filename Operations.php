@@ -31,27 +31,57 @@ class Operations
         $statement= $this->conn->prepare($sql);
         $statement->execute();
         $categoryList = array();
-        while ($category = $statement->fetchObject('Category')) {
+        while ($category = $statement->fetchObject('category')) {
             $categoryList[] = $category;
         }
         return $categoryList;
     }
+
+    function getAllProducts()
+    {
+        
+        $sql = 'select * from product';
+        $statement = $this->conn->prepare($sql);
+        $statement->execute();
+        $productList = array();        
+        while ($productData = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $product = new Product();
+            $product->setId($productData['id'])
+                ->setName($productData['name'])
+                ->setDescription($productData['description'])
+                ->setPicture($productData['picture']);
+
+            $categoryId = $productData['idCategory'];
+            $categoryData = $this->getCategory($categoryId);
+
+            $category = new Category();
+            $category->setId($categoryData['id'])
+                ->setName($categoryData['name']);
+            
+            $product->setCategory($category);
+
+            $productList[] = $product;
+        }
+
+        return $productList;
+    }
     function addProduct(Product $product){
         $sql = 'insert into product(name,
-         description, picture, idCategory)';
-         $statement= $this->conn->prepare($sql);
+         description, picture, idCategory) values (?,?,?,?)';
+         $statement= $this->conn->prepare($sql);         
+    $categoryId = $product->getCategory()->getId();
         $statement->execute([$product->getName(),
         $product->getDescription(), $product->getPicture(),
-        $product->getCategory()]);
+        $categoryId]);
         return $statement->rowCount();
     }
     function updateProduct(Product $product){
         $sql = 'update product set name= ? ,
-        description = ? , picture = ? , idCategory = ? where id = ?)';
+        description = ? , picture = ? , idCategory = ? where id = ?';
         $statement= $this->conn->prepare($sql);
        $statement->execute([$product->getName(),
        $product->getDescription(), $product->getPicture(),
-       $product->getCategory(), $product->getId()]);
+       $product->getCategory()->getId(), $product->getId()]);
        return $statement->rowCount();
     }
     function getUserName($login, $password){

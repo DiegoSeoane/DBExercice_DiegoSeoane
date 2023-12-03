@@ -2,10 +2,11 @@
 include('header.php');
 
 if (isset($_POST['submit'])) {
-    $cat = $operation->getCategory((int)$_POST['newCatID']);
-    echo '<p>no imprime</p>';
+    $cat = $operation->getCategory((int)$_POST['selCat']);
     if ($cat !== false) {
-        $category = new Category($cat['id'],$cat['name']);
+        $category = new Category();        
+        $category->setId($cat['id']);
+        $category->setName($cat['name']);
         $product = new Product();
         $product->setName($_POST['newName']);
         $product->setDescription($_POST['newDesc']);
@@ -16,7 +17,6 @@ if (isset($_POST['submit'])) {
         echo '<p>Error: Category not found.</p>';        
     }
 
-    //ENGADIR BOTON PARA VER AS CATEGORIAS
 }
 ?>
 <form action="" method="post" class="newProduct">
@@ -27,8 +27,12 @@ if (isset($_POST['submit'])) {
 
     <label for="newDesc">Description</label>
     <input type="text" name='newDesc' id="idProdDesc">
-
-    <label for="newCatID">Category ID</label>
-    <input type="text" name='newCatID' id="idProdCat">
+    <select name="selCat" id="idselCat">
+        <?php
+        foreach ($operation->getAllCategories() as $key => $value) {
+            echo '<option value="'.$value->getId().'">'.$value->getName().'</option>';
+        }
+        ?>
+    </select>
     <button type="submit" name="submit">Click to Add</button>
 </form>
