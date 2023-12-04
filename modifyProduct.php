@@ -3,11 +3,13 @@ include('header.php');
 ?>
 <form action="" method="post" class="formUpdate">
     <?php
+    
     $id = $_GET['id'];
     try {
         if (isset($id)) {
             if ($operation->getProduct($id)) {
                 $product = $operation->getProduct($id);
+                $cat = $operation->getCategory($product['idCategory']);
                 $picture = $product['picture']?? 'No Image';
                 if ($name['admin']==1) {  
                     echo '<h1>'.$product['name'].'</h1>';
@@ -20,7 +22,12 @@ include('header.php');
                 echo '<label>Picture</label>';
                 echo '<input type="text" name="picture" value="' . $picture . '">';
                 echo '<label>Category</label>';
-                echo '<input type="text" name="idCategory" value="' . $product['idCategory'] . '">';
+                echo '<select name="modCat" id="idmodCat">';
+                foreach ($operation->getAllCategories() as $key => $value) {                    
+                    $selected = ($value->getId() == $product['idCategory']) ? 'selected' : '';
+                    echo '<option value="' . $value->getId() . '" ' . $selected . '>' . $value->getName() . '</option>';
+               }                
+                echo '</select>';
                 echo '<button type="submit" name="submit">Modify</button>';
 
             }else{
@@ -34,23 +41,27 @@ include('header.php');
                 echo '<label>Picture</label>';
                 echo '<label>' . $picture . '</label>';
                 echo '<label>Category</label>';
-                echo '<label>' . $product['idCategory'] . '</label>';
+                echo '<label>' . $cat['name'] . '</label>';
                 }
             } else {
                 echo '<p style="color:red">Wrong ID</p>';
             }
         
         }
-        if (isset($_POST['submit'])) {            
-            $categ = $operation->getCategory($_POST['idCategory']);
-            $category = new Category();
-            $category->setId($categ['id']);
-            $category->setName($categ['name']);
+        if (isset($_POST['submit'])) {
+            $categor = $operation->getCategory((int)$_POST['modCat']);
             $newProd = new Product();
+            
+            $category = new Category();        
+            $category->setId($categor['id']);
+            $category->setName($categor['name']);
             $newProd->setId($product['id']);
+            
             $newProd->setName($_POST['name']);
             $newProd->setDescription($_POST['description']);
+            
             $newProd->setCategory($category);
+            
             try {
                 $result = $operation->updateProduct($newProd);
 

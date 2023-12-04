@@ -5,12 +5,12 @@ try {
 $database = new Database('localhost','review','gestor','abc123.');
 $oper = new Operations($database);
 if (isset($_POST['submit'])) {
-    $username = $_POST['login'];    
+    $username = $_POST['login'];
     $password = $_POST['password'];
     if ($oper->getUserName($username, $password)!=null) {
         setcookie('username',$username);
         setcookie('password',$password);
-        header('location: welcome.php');        
+        header('location: welcome.php');
     }else{        
         echo '<p style="color:red">User or password incorrect</p>';
     }

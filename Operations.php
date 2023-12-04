@@ -50,7 +50,6 @@ class Operations
                 ->setName($productData['name'])
                 ->setDescription($productData['description'])
                 ->setPicture($productData['picture']);
-
             $categoryId = $productData['idCategory'];
             $categoryData = $this->getCategory($categoryId);
 
